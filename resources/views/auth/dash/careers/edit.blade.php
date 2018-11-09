@@ -9,13 +9,13 @@
  
 
 @section('content')
-      <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--white-400 mdl-color-text--blue-grey-50">
+        <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--white-400 mdl-color-text--blue-grey-50">
             <div class="mdl-grid demo-content">
                <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Editar Area </div>
+                <div class="card-header">Editar Carreras </div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -25,10 +25,15 @@
                     @endif
 
                      <br>
-                   {!!Form::model($area ,['route' => ['areas.update',$area->ida],'method'=>'PUT', 'enctype' => 'multipart/form-data','files'=>'true'])!!}
+                 {!!Form::model($career,['route' => ['careers.update',$career->idc],'method'=>'PUT'])!!} 
 
-              Nombre de la area
-               {{ Form::text('area', null, ['class' => 'form-control', 'placeholder' => 'Aqui va el area', 'required' => true])}}
+              
+              Nombre de la carrera
+               {{ Form::text('name', null, ['class' => 'form-control',  'placeholder' => 'Aqui va el nombre', 'required' => true])}}
+              <br>Activo
+               {{ Form::select('active', ['No' => 'Inactive', 'Si' => 'Active'], '1', ['class' => 'form-control']) }}
+               <br>Area
+               {{ Form::select('ida', $areas,[] ,['class' => 'form-control this','placeholder', 'placeholder' => 'Selecciona carrera', 'required' => true]) }} 
                <br>{{ form::submit('Guardar', ['class' => 'btn btn-primary btn-lg']) }}
                {!! Form::close() !!}
                 </div>

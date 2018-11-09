@@ -9,7 +9,7 @@
  
 
 @section('content')
-       <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--green-400 mdl-color-text--blue-grey-50">
+        <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--white-400 mdl-color-text--blue-grey-50">
             <div class="mdl-grid demo-content">
                <div class="container">
     <div class="row justify-content-center">
@@ -31,25 +31,40 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($careers as $key)
+       @if(count($careers) > 0)
+    @foreach($careers as $career)
     <tr>
-      <td>{{ $key->idc}}</td>
-      <td>{{ $key->name }}</td>
-      <td>{{ $key->active }}</td>
-      <td>{{ $key->ida }}</td>
-      <td>{{ $key->created_at }}</td>
-      <td>{{ $key->updated_at }}</td>
+      <td>{{ $career->idc}}</td>
+      <td>{{ $career->name }}</td>
+      <td>{{ $career->active }}</td>
+      <td>{{ $career->ida }}</td>
+      <td>{{ $career->created_at }}</td>
+      <td>{{ $career->updated_at }}</td>
       <td>
-       </td>
-    </tr>
+                                         @if($career->deleted_at =="")
+                                        {!!link_to_route('careers.edit', $title = 'Editar', $parameters = $career->idc, $attributes = ['class'=>'btn btn-success btn-flat btn-addon m-b-10 m-l-5'])!!} 
+                                        {!!Form::open(['route' => ['careers.destroy',$career->idc],'method'=>'DELETE'])!!} 
+                                        {!!Form::submit('Eliminar',['class'=>'btn btn-inverse waves-effect waves-light'  ])!!}
+                                        {!!Form::close()!!}
+                                        @else
+                                        {!!link_to_route('careers.show', $title = 'Restaurar', $parameters = $career->idc, $attributes = ['class'=>'btn btn-success waves-effect waves-light m-r-10'] )!!} 
+                                        
+                                        @endif
 
+                                       </td>
+                                        </tbody>
+                                       @endforeach
+                                       @endif
+                                   </table>
+           
+          </td>
 
-    @endforeach
-  </tbody>
-     
-    
+          </tbody>
+      
+          
+       
+         </tr>
+
 </table>
 
-
-         </main>
- @endsection
+@endsection

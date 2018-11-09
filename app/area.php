@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class area extends Model
 {
 	use SoftDeletes;
-      protected $table= 'areas';
+    protected $table= 'areas';
+    protected $primaryKey='ida';
     protected $fillable= ['ida','area'];
+    protected $hidden = ['remember_token'];
     protected $date = ['deleted_at'];
 }

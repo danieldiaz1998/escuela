@@ -9,7 +9,7 @@
  
 
 @section('content')
-       <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--green-400 mdl-color-text--blue-grey-50">
+        <main class="mdl-layout__content mdl-blue-grey-50 mdl-color--white-400 mdl-color-text--blue-grey-50">
             <div class="mdl-grid demo-content">
                <div class="container">
     <div class="row justify-content-center">

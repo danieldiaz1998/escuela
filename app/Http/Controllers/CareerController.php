@@ -5,17 +5,15 @@ namespace App\Http\Controllers;
 use App\Career;
 use App\Area;
 use Illuminate\Http\Request;
+use Redirect;
+use Session;
 
 class CareerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-     $careers=career::all();
+      $careers = career::withTrashed() ->get();
         
       return view('auth.dash.careers.index', compact('careers'));
 
@@ -42,64 +40,42 @@ class CareerController extends Controller
         return redirect()->back()->with('status', 'La carrera se agrego correctamente ');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Career  $career
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Career $career)
+
+    public function show($idc)
     {
-        //
+        career::withTrashed()
+    ->where('idc',$idc)
+    ->restore();
+    return redirect()->back()->with('status', 'Se restauro correctamente ');
+     return view('auth.dash.careers.index', compact('careers'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Career  $career
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Career $career)
+    public function edit($idc)
     {
-        //
+    $careers = career::find($idc);
+    $areas=area::pluck('area','ida');
+    return view('auth.dash.careers.edit')->with('career',$careers)->with('areas',$areas);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Career  $career
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Career $career)
-    {
-      $career=Career::find($id);
 
+    public function update(Request $request, $idc)
+    {
+      $career=Career::find($idc);
         $career->name=$request->name;
-           $career->area=$request->area;
         $career->active=$request->active;
-               $career->ida=$request->ida;
+        $career->ida=$request->ida;
+        $career->save();
 
-        if ($career->save()) 
-        {
-        
-            return redirect()->back()->with('status', 'Se guardo corectamente  ');
 
-        }  
+        return redirect()->back()->with('status', 'La carrera se agrego correctamente ');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Career  $career
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Career $career)
+    public function destroy($idc)
     {
-        $career=Career::find($id);
-        if($career->delete())
-        {
-            return redirect()->back()->with('status','Se elimino la carrera exitosamente');
-        }
+         career::find($idc)
+        ->delete();
+             
+        return redirect()->back()->with('status', 'Se elimino correctamente ');
+         return view('auth.dash.careers.index');
     }
 }

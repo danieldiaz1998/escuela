@@ -19,8 +19,9 @@ class CreateCareersTable extends Migration
             $table->string('active');
              $table->integer('ida')->unsigned();
              $table->foreign('ida')->references('ida')->on('areas')->onDelete('cascade');
-            $table->rememberToken();
-            $table->timestamps();
+        $table->rememberToken();
+        $table->timestamps();
+        $table->softDeletes();
         });
     }
 

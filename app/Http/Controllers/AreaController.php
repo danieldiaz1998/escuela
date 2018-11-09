@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\area;
 use Illuminate\Http\Request;
-
+use Redirect;
+use Session;
 class AreaController extends Controller
 {
     /**
@@ -14,16 +15,12 @@ class AreaController extends Controller
      */
     public function index()
     {
-        $areas=area::all();
+         $areas = area::withTrashed() ->get();
         
       return view('auth.dash.areas.index', compact('areas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
          $areas=area::all();
@@ -31,12 +28,7 @@ class AreaController extends Controller
         return view('auth.dash.areas.create', compact('areas'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
          $area = new Area();
@@ -45,68 +37,50 @@ class AreaController extends Controller
         $area->save();
 
 
-        return redirect()->back()->with('status', 'La carrera se agrego correctamente ');
+        return redirect()->back()->with('status', 'La area se agrego correctamente ');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function show(area $ida)
+    public function show($ida)
     {
-           area::withTrashed()
+  area::withTrashed()
     ->where('ida',$ida)
     ->restore();
+    return redirect()->back()->with('status', 'Se restauro correctamente ');
+     return view('auth.dash.areas.index', compact('areas'));
 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(area $ida)
+    public function edit($ida)
     {
-               $areas = area::find($ida);//el $ cartas es la variable el segundo cartes es la referencia al modelo es como decir $cartas = a select * from cartas where id == al id que recibes :: esto que es es como el termino es decir lo que esta antes es select  * from cartas y lo que esta despues :: son las condiciones 
-        return view('auth.dash.areas.edit',compact('areas'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request,$ida)
     {
-                $area=area::find($ida);
-
       
+       $areas = area::find($ida);  //el $ areas es la variable el segundo cartes es la referencia al modelo es como decir $cartas = a select * from cartas where id == al id que recibes :: esto que es es como el termino es decir lo que esta antes es select  * from cartas y lo que esta despues :: son las condiciones 
+        return view('auth.dash.areas.edit')->with('area',$areas);
+    }
+    }
+
+
+    public function update(Request $request, $ida )
+    {
+        $area=area::find($ida);
+
         $area->area=$request->area;
 
         if ($area->save()) 
         {
         
             return redirect()->back()->with('status', 'Se guardo corectamente  ');
+                    
         }  
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\area  $area
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($ida)
     {
-        $areas=Area::find($ida);
-        if($areas->delete())
-        {
-            return redirect()->back()->with('status','se elimino la categoria exitosamente');
-        }
+        area::find($ida)
+        ->delete();
+             
+        return redirect()->back()->with('status', 'Se elimino correctamente ');
+         return view('auth.dash.areas.index');
      }
 }

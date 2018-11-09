@@ -18,6 +18,7 @@ class CreateAreasTable extends Migration
             $table->string('area');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
