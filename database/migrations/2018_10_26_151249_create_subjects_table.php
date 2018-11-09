@@ -22,8 +22,9 @@ class CreateSubjectsTable extends Migration
              $table->integer('ida')->unsigned();
             $table->foreign('idc')->references('idc')->on('careers')->onDelete('cascade');
             $table->foreign('ida')->references('ida')->on('areas')->onDelete('cascade');
-            $table->rememberToken();
-            $table->timestamps();
+              $table->rememberToken();
+        $table->timestamps();
+        $table->softDeletes();
         });
     }
 

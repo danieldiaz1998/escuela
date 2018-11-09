@@ -6,13 +6,15 @@ use App\Subject;
 use App\Career;
 use App\Area;
 use Illuminate\Http\Request;
+use Redirect;
+use Session;
 
 class SubjectController extends Controller
 {
    
     public function index()
     {
-     $subjects=subject::all();
+     $subjects=subject::withTrashed() ->get();
         
       return view('auth.dash.subjects.index', compact('subjects'));
     }
@@ -54,9 +56,13 @@ class SubjectController extends Controller
      * @param  \App\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function show(subject $subject)
+    public function show($ids)
     {
-        //
+     subject::withTrashed()
+    ->where('ids',$ids)
+    ->restore();
+    return redirect()->back()->with('status', 'Se restauro correctamente ');
+     return view('auth.dash.subjects.index', compact('subjects'));
     }
 
     /**
@@ -65,9 +71,12 @@ class SubjectController extends Controller
      * @param  \App\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function edit(subject $subject)
+    public function edit($ids)
     {
-        //
+     $subjects = subject::find($ids);
+             $careers=career::pluck('name','idc');
+          $areas=area::pluck('area','ida');
+    return view('auth.dash.subjects.edit')->with('subject',$subjects)->with('areas',$areas)->with('career',$careers);
     }
 
     /**
@@ -77,9 +86,18 @@ class SubjectController extends Controller
      * @param  \App\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, subject $subject)
+    public function update(Request $request,$ids)
     {
-        //
+        $subject=subject::find($ids);
+        $subject->subject=$request->subject;
+        $subject->active=$request->active;
+        $subject->academy=$request->academy;
+        $subject->idc=$request->idc;
+        $subject->ida=$request->ida;
+        $subject->save();
+
+
+        return redirect()->back()->with('status', 'La carrera se agrego correctamente ');
     }
 
     /**
@@ -88,8 +106,12 @@ class SubjectController extends Controller
      * @param  \App\subject  $subject
      * @return \Illuminate\Http\Response
      */
-    public function destroy(subject $subject)
+    public function destroy($ids)
     {
-        //
+        subject::find($ids)
+        ->delete();
+             
+        return redirect()->back()->with('status', 'Se elimino correctamente ');
+         return view('auth.dash.subjects.index');
     }
 }

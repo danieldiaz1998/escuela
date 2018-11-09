@@ -33,26 +33,42 @@
     </tr>
   </thead>
   <tbody>
-    @foreach($subjects as $key)
+     @if(count($subjects) > 0)
+    @foreach($subjects as $subject)
     <tr>
-      <td>{{ $key->ids}}</td>
-      <td>{{ $key->subject }}</td>
-      <td>{{ $key->active }}</td>
-       <td>{{ $key->academy }}</td>
-      <td>{{ $key->idc }}</td>
-      <td>{{ $key->ida }}</td>
-      <td>{{ $key->created_at }}</td>
-      <td>{{ $key->updated_at }}</td>
-      
-    </tr>
-   
+      <td>{{ $subject->ids}}</td>
+      <td>{{ $subject->subject }}</td>
+      <td>{{ $subject->active }}</td>
+       <td>{{ $subject->academy }}</td>
+      <td>{{ $subject->idc }}</td>
+      <td>{{ $subject->ida }}</td>
+      <td>{{ $subject->created_at }}</td>
+      <td>{{ $subject->updated_at }}</td>
+      <td>
+                                        @if($subject->deleted_at =="")
+                                        {!!link_to_route('subjects.edit', $title = 'Editar', $parameters = $subject->ids, $attributes = ['class'=>'btn btn-success btn-flat btn-addon m-b-10 m-l-5'])!!} 
+                                        {!!Form::open(['route' => ['subjects.destroy',$subject->ids],'method'=>'DELETE'])!!} 
+                                        {!!Form::submit('Eliminar',['class'=>'btn btn-inverse waves-effect waves-light'  ])!!}
+                                        {!!Form::close()!!}
+                                        @else
+                                        {!!link_to_route('subjects.show', $title = 'Restaurar', $parameters = $subject->ids, $attributes = ['class'=>'btn btn-success waves-effect waves-light m-r-10'] )!!} 
+                                        
+                                        @endif
 
-    @endforeach
-  </tbody>
-     
-    
+                                       </td>
+                                        </tbody>
+                                       @endforeach
+                                       @endif
+                                   </table>
+           
+          </td>
+
+          </tbody>
+      
+          
+       
+         </tr>
+
 </table>
 
-
-         </main>
- @endsection
+@endsection
